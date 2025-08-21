@@ -1,0 +1,574 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #282c34;
+    color: #abb2bf;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+.engine-ui {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 250px 1fr 300px;
+    height: 100%;
+    grid-template-areas:
+        "toolbar toolbar toolbar"
+        "hierarchy-panel center-panel right-panel";
+}
+
+.toolbar {
+    grid-area: toolbar;
+    background-color: #21252b;
+    padding: 5px 10px;
+    border-bottom: 1px solid #181a1f;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.toolbar button {
+    background-color: #3a404c;
+    color: #abb2bf;
+    border: 1px solid #181a1f;
+    border-radius: 3px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.toolbar button:hover {
+    background-color: #4f5b6a;
+}
+
+.toolbar .tools .tool.active {
+    background-color: #09f;
+    color: #fff;
+}
+
+.left-panel, .center-panel, .right-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.left-panel {
+    grid-area: hierarchy-panel;
+    background-color: #2c313a;
+    border-right: 1px solid #181a1f;
+}
+
+.center-panel {
+    grid-area: center-panel;
+    display: grid;
+    grid-template-rows: 1fr 250px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "scene-view"
+        "console-area";
+}
+
+.right-panel {
+    grid-area: right-panel;
+    background-color: #2c313a;
+    border-left: 1px solid #181a1f;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #3a404c;
+}
+
+.panel-header h3 {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.add-btn {
+    background-color: #3a404c;
+    border: 1px solid #181a1f;
+    color: #abb2bf;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 18px;
+    text-align: center;
+    padding: 0;
+}
+
+.add-btn:hover {
+    background-color: #4f5b6a;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #3a404c;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border: 1px solid #181a1f;
+    border-radius: 3px;
+}
+
+.dropdown-content a {
+    color: #abb2bf;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+    font-size: 13px;
+}
+
+.dropdown-content a:hover {
+    background-color: #4f5b6a;
+}
+
+.hierarchy-panel, .project-panel, .inspector-panel, .scene-view, .console-panel {
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.resizable-v {
+    resize: vertical;
+}
+
+.hierarchy-panel {
+    min-height: 100px;
+}
+
+.project-panel {
+    background-color: #21252b;
+    padding: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.scene-view {
+    grid-area: scene-view;
+    height: auto;
+    min-height: 150px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.scene-tabs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    border-bottom: 1px solid #181a1f;
+    flex-shrink: 0;
+}
+
+.tabs-container {
+    display: flex;
+    gap: 2px;
+}
+
+.tab {
+    background-color: #21252b;
+    padding: 5px 10px;
+    border-radius: 3px 3px 0 0;
+    cursor: pointer;
+    border: 1px solid #181a1f;
+    border-bottom: none;
+    font-size: 13px;
+}
+
+.tab:hover {
+    background-color: #3a404c;
+}
+
+.tab.active {
+    background-color: #3a404c;
+    color: #fff;
+}
+
+.add-tab-btn {
+    background-color: transparent;
+    border: 1px solid #3a404c;
+    color: #abb2bf;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 16px;
+    text-align: center;
+    padding: 0;
+}
+
+.add-tab-btn:hover {
+    background-color: #3a404c;
+}
+
+#scene-canvas-container {
+    flex-grow: 1;
+    background-color: #3a404c;
+    margin-top: 0;
+    border: none;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+#scene-canvas-container canvas {
+    display: block;
+}
+
+.console-area {
+    grid-area: console-area;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #181a1f;
+    overflow: hidden;
+}
+
+.console-tabs-header {
+    display: flex;
+    padding: 0 10px;
+    border-bottom: 1px solid #181a1f;
+    flex-shrink: 0;
+}
+
+.console-tab-content {
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+.console-left-sidebar {
+    width: 200px;
+    background-color: #2c313a;
+    border-right: 1px solid #181a1f;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.console-sidebar-header {
+    padding: 8px 10px;
+    background-color: #21252b;
+    border-bottom: 1px solid #181a1f;
+    flex-shrink: 0;
+}
+
+.console-sidebar-header h4 {
+    margin: 0;
+    font-size: 12px;
+    color: #9da5b4;
+    font-weight: normal;
+}
+
+.console-right-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+.tab-pane {
+    display: none;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.tab-pane.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.console-panel {
+    background-color: #21252b;
+    padding: 10px;
+}
+
+.assets-panel {
+    background-color: #21252b;
+    padding: 10px;
+}
+
+#asset-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.asset-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.asset-item:hover {
+    background-color: #3a404c;
+}
+
+.asset-icon {
+    font-size: 48px;
+    line-height: 1;
+}
+
+.asset-name {
+    margin-top: 5px;
+    word-break: break-all;
+}
+
+#console-output {
+    flex-grow: 1;
+    background-color: #282c34;
+    padding: 5px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 12px;
+    white-space: pre-wrap;
+}
+
+.inspector-panel {
+    height: 100%;
+}
+
+h3 {
+    margin-top: 0;
+    font-size: 14px;
+    color: #9da5b4;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#hierarchy-list li {
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#hierarchy-list li::before {
+    content: '▫️';
+    font-size: 10px;
+    min-width: 16px;
+    text-align: center;
+}
+
+#hierarchy-list li:hover {
+    background-color: #3a404c;
+}
+
+#hierarchy-list li .script-icon {
+    margin-left: auto;
+    padding: 0px 4px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+#hierarchy-list li .script-icon:hover {
+    background-color: #61afef;
+    color: #21252b;
+}
+
+#hierarchy-list li.selected {
+    background-color: #09f;
+    color: white;
+}
+
+.context-menu {
+    display: none;
+    position: absolute;
+    background-color: #3a404c;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000;
+    border: 1px solid #181a1f;
+    border-radius: 3px;
+    padding: 5px 0;
+}
+
+.context-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.context-menu li {
+    color: #abb2bf;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.context-menu li:hover {
+    background-color: #4f5b6a;
+}
+
+#file-tree {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding: 10px;
+}
+
+#file-tree ul {
+    list-style: none;
+    padding-left: 15px;
+    margin: 0;
+}
+
+#file-tree li {
+    padding: 3px 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+#file-tree li.file-item:hover, #file-tree div.folder-name:hover {
+    background-color: #3a404c;
+}
+
+#file-tree .folder > .folder-name::before {
+    content: '▼';
+    display: inline-block;
+    width: 1em;
+    margin-right: 2px;
+    font-size: 10px;
+    transition: transform 0.1s linear;
+}
+
+#file-tree .folder.collapsed > .folder-name::before {
+    transform: rotate(-90deg);
+}
+
+#file-tree .folder.collapsed > ul {
+    display: none;
+}
+
+#file-tree .file-icon, #file-tree .folder-icon {
+    margin-right: 5px;
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+}
+
+.script-editor-view {
+    grid-area: scene-view; /* Occupy the same space as scene-view */
+    display: flex;
+    flex-direction: column;
+    background-color: #21252b;
+    z-index: 10;
+}
+
+.script-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: #282c34;
+    border-bottom: 1px solid #181a1f;
+    flex-shrink: 0;
+}
+
+#script-editor-filename {
+    font-weight: bold;
+}
+
+#script-editor-close-btn {
+    background: transparent;
+    border: none;
+    color: #abb2bf;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+#script-editor-close-btn:hover {
+    color: #fff;
+}
+
+#script-editor-container {
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.CodeMirror {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+#inspector-content {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 3px;
+    flex-grow: 1;
+}
+
+#inspector-content .lil-gui {
+    --background-color: #2c313a;
+    --widget-color: #21252b;
+    --title-background-color: #21252b;
+    --text-color: #abb2bf;
+    --font-size: 14px;
+    --input-font-size: 14px;
+    --padding: 10px;
+    --folder-indent: 10px;
+    --widget-height: 24px;
+    --name-width: 45%;
+    --border-radius: 3px;
+    --root-width: 100%;
+    --hover-color: #3a404c;
+    --focus-color: #4f5b6a;
+    --number-color: #61afef;
+    --string-color: #98c379;
+}
+
+#inspector-content .lil-gui.root > .title {
+    background-color: #3a404c;
+    border-bottom: 1px solid #181a1f;
+}
+
+#inspector-content .lil-gui .controller > .name {
+    color: #9da5b4;
+}
+
+#inspector-content .lil-gui .lil-gui > .children > .lil-gui > .title {
+    background: #3a404c;
+}
